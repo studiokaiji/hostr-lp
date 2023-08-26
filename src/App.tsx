@@ -143,8 +143,7 @@ function App() {
               <div>
                 <p>2. Set private key</p>
                 <Code shell>
-                  nostrh set-private "nsec or hex private key" nostrh
-                  generate-key
+                  nostrh set-private "nsec or hex private key"
                 </Code>
                 <p className="text-gray-500">
                   Or if you want to generate private key
