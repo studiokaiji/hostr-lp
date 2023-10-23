@@ -14,27 +14,21 @@ import { Footer } from "./components/Footer";
 import { TypeWriter } from "./components/TypeWriter";
 import { useMemo } from "react";
 
-const isNostrId = (id: string) => /^[0-9a-f]{64}$/i.test(id);
-
 function App() {
-  const htmlId = useMemo(
-    () =>
-      window.location.pathname.split("/")[2] ||
-      "20c26cb47649cae41ff5a2fd8dee6201f7cfc7c00103682cb8c81ac36dec82c0",
+  const htmlTag = useMemo(
+    () => window.location.pathname.split("/").slice(-1)?.[0] || "hostr-lp",
     []
   );
-  const cssId = useMemo(() => {
+  const cssPath = useMemo(() => {
     const cssList = Array.from(document.styleSheets);
-    const nostrCss = cssList.filter((s) => s.href && isNostrId(s.href));
-    if (nostrCss.length) {
-      return nostrCss[0].href?.split("/").slice(-1)[0] || "";
-    } else {
-      return "";
-    }
-  }, []);
-  const jsId = useMemo(
-    () => Array.from(document.scripts)[0].src?.split("/").slice(-1)[0],
-    []
+    const nostrCss = cssList.filter((s) => s?.href?.includes(htmlTag));
+    return htmlTag + nostrCss?.[0]?.href?.split(htmlTag)?.[1] || "";
+  }, [htmlTag]);
+  const jsPath = useMemo(
+    () =>
+      htmlTag + Array.from(document.scripts)?.[0]?.src?.split(htmlTag)?.[1] ||
+      "",
+    [htmlTag]
   );
 
   return (
@@ -52,9 +46,9 @@ function App() {
                   delay={300}
                   textList={[
                     "connected_relay: wss://r.hostr.cc",
-                    `html_event.id: ${htmlId}`,
-                    `css_event.id: ${cssId}`,
-                    `js_event.id: ${jsId}`,
+                    `HTML Tag: ${htmlTag}`,
+                    `CSS Tag: ${cssPath}`,
+                    `JS Tag: ${jsPath}`,
                   ]}
                 />
               </div>
@@ -126,7 +120,7 @@ function App() {
                 ),
               },
             ].map((feature) => (
-              <Feature {...feature} />
+              <Feature key={feature.title} {...feature} />
             ))}
           </div>
         </Section>
@@ -137,33 +131,31 @@ function App() {
               <div>
                 <p>1. Install CLI tool (Golang Required)</p>
                 <Code shell>
-                  go install github.com/studiokaiji/nostr-webhost/nostrh@latest
+                  go install github.com/studiokaiji/nostr-webhost/hostr@latest
                 </Code>
               </div>
               <div>
                 <p>2. Set private key</p>
-                <Code shell>
-                  nostrh set-private "nsec or hex private key"
-                </Code>
+                <Code shell>hostr set-private "nsec or hex private key"</Code>
                 <p className="text-gray-500">
                   Or if you want to generate private key
                 </p>
-                <Code shell>nostrh generate-key</Code>
+                <Code shell>hostr generate-key</Code>
               </div>
               <div>
                 <p>3. Add relay</p>
-                <Code shell>nostrh add-relay wss://r.hostr.cc</Code>
+                <Code shell>hostr add-relay wss://r.hostr.cc</Code>
               </div>
               <div>
                 <p>
                   4. Deploy SPA (If you haven't built the SPA yet, do so before
                   this step.)
                 </p>
-                <Code shell>nostrh deploy /BUILT/SPA/DIR/PATH</Code>
+                <Code shell>hostr deploy /BUILT/SPA/DIR/PATH</Code>
               </div>
               <div>
                 <p>5. Start web server</p>
-                <Code shell>nostrh start</Code>
+                <Code shell>hostr start</Code>
               </div>
               <div>
                 <p>
