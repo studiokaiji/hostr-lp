@@ -151,7 +151,7 @@ function App() {
                   4. Deploy SPA (If you haven't built the SPA yet, do so before
                   this step.)
                 </p>
-                <Code shell>hostr deploy /BUILT/SPA/DIR/PATH</Code>
+                <Code shell>hostr deploy --path=/BUILT/SPA/DIR/PATH --replaceable=false</Code>
               </div>
               <div>
                 <p>5. Start web server</p>
